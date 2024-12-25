@@ -1,4 +1,4 @@
-# Modify gitignore and workflow for rails and node for Flowbite setup.
+# Set up Flowbite for Rails - include gitignore and workflow modification.
 # The added weight of the gem files and node packages should not be pushed up to github.
 
 # # When cloning the repo, run bundle or bundle install and Rails will review the gem / 
