@@ -1,3 +1,5 @@
+require 'fileutils'
+
 # Modify gitignore and workflow for rails and node for basic setup.
 # The added weight of the gem files should not be pushed up to github.
 
@@ -9,10 +11,20 @@
 # and working. Uses PostgreSQL in workflow. 
 
 # NOTE - This will completely rewrite these files.
-# NOTE - Default used with modifications noted.
+# NOTW - Default used with modifications noted.
+
+# Method to write a file, deleting existing file if necessary
+def write_file(file_path, content)
+  if File.exist?(file_path)
+    File.delete(file_path)  # Delete the existing file
+  end
+  File.open(file_path, 'w') do |file|
+    file.write(content)  # Write the new content
+  end
+end
 
 # Add lines to .gitignore
-file '.gitignore', force: true, <<-CODE
+write_file('.gitignore', <<-CODE
 # ignore the gems of bundle
 /vendor/bundle
 
@@ -48,10 +60,15 @@ file '.gitignore', force: true, <<-CODE
 /app/assets/builds/*
 !/app/assets/builds/.keep
 CODE
+)
+
+# Ensure the workflows directory exists
+workflow_dir = '.github/workflows'
+FileUtils.mkdir_p(workflow_dir) unless Dir.exist?(workflow_dir)
 
 # Modify the ci.yml file
-inside('.github/workflows') do
-  file 'ci.yml', force:true, <<-YAML
+inside(workflow_dir) do
+  write_file('ci.yml', <<-YAML
 name: CI
 
 on:
@@ -120,12 +137,6 @@ jobs:
           - 5432:5432
         options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
 
-      # redis:
-      #   image: redis
-      #   ports:
-      #     - 6379:6379
-      #   options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
-
     steps:
       - name: Install packages
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql-client
@@ -143,7 +154,6 @@ jobs:
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
-          # REDIS_URL: redis://localhost:6379/0
         run: 
           bin/rails db:migrate db:test:prepare test test:system
 
@@ -156,4 +166,5 @@ jobs:
           if-no-files-found: ignore
 
 YAML
+  )
 end
