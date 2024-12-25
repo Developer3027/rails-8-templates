@@ -12,7 +12,7 @@
 # NOTE - Default used with modifications noted.
 
 # Add lines to .gitignore
-file '.gitignore', <<-CODE
+file '.gitignore', force: true, <<-CODE
 # ignore the gems of bundle
 /vendor/bundle
 
@@ -51,7 +51,7 @@ CODE
 
 # Modify the ci.yml file
 inside('.github/workflows') do
-  file 'ci.yml', <<-YAML
+  file 'ci.yml', force:true, <<-YAML
 name: CI
 
 on:
