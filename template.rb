@@ -1,12 +1,12 @@
-# Modify gitignore and workflow for rails and node for Flowbite setup.
-# The added weight of the gem files and node packages should not be pushed up to github.
+# Modify gitignore and workflow for rails and node for basic setup.
+# The added weight of the gem files should not be pushed up to github.
 
-# # When cloning the repo, run bundle or bundle install and Rails will review the gem / 
-# gem-lock file and install the missing gems. Pushing that weight is not needed. Same 
-# for node packages with npm.
+# When cloning the repo, run bundle or bundle install and Rails will review the gem / 
+# gem-lock file and install the missing gems. Pushing that weight is not needed.
 
 # This templates will add the lines to the gitignore, cutting the weight of the tracked 
-# files, and modify the workflow job - test to ensure the container is set up properly. 
+# files, and modify the workflow job - test to ensure the container is set up properly
+# and working. Uses PostgreSQL in workflow. 
 
 # NOTE - This will completely rewrite these files.
 # NOTW - Default used with modifications noted.
@@ -15,9 +15,6 @@
 file '.gitignore', <<-CODE
 # ignore the gems of bundle
 /vendor/bundle
-
-# Ignore node modules
-/node_modules
 
 # Ignore bundler config.
 /.bundle
@@ -133,16 +130,8 @@ jobs:
       - name: Install packages
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql-client
 
-      - name: Install Node.js # Need npm besause of Flowbite
-        uses: actions/setup-node@v4
-        with:
-          node-version: 16
-
       - name: Checkout code # Grab the code for the package json
         uses: actions/checkout@v4
-
-      - name: Install Node packages # Only install packages in package json
-        run: npm ci
 
       - name: Set up Ruby # Will run bundle auto on setup I assume because bundler-cache true.
         uses: ruby/setup-ruby@v1
