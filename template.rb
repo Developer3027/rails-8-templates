@@ -9,7 +9,7 @@
 # and working. Uses PostgreSQL in workflow. 
 
 # NOTE - This will completely rewrite these files.
-# NOTW - Default used with modifications noted.
+# NOTE - Default used with modifications noted.
 
 # Add lines to .gitignore
 file '.gitignore', <<-CODE
