@@ -6,7 +6,7 @@ With the recent update to rails 8 and tailwind, I noticed that the tailwind conf
 1. Open the prefered branch and click on the template.rb file. Click on the "*raw*" button and use that url in the command.
 2. Open the prefered branch and copy the template.rb code. Create a template.rb file in the folder you are going to create the new app and pass it in the command.
 
-## Main
+## Use Tailwind Template
 
 ```rails new my-app -d postgresql -c tailwind -m https://raw.githubusercontent.com/Developer3027/rails-8-templates/refs/heads/tailwind/template.rb```
 
