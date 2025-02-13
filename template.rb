@@ -177,8 +177,8 @@ config_dir = 'config'
 FileUtils.mkdir_p(config_dir) unless Dir.exist?(config_dir)
 
 # Create the tailwind.config file
-inside(workflow_dir) do
-  write_file('tailwind.config', <<-CODE
+inside(config_dir) do
+  write_file('tailwind.config.js', <<-CODE
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
@@ -207,3 +207,4 @@ module.exports = {
 
 CODE
 )
+end
