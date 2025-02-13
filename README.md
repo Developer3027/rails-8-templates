@@ -8,6 +8,6 @@ With the recent update to rails 8 and tailwind, I noticed that the tailwind conf
 
 ## Main
 
-```rails new my-app -d postgresql -c tailwind -m https://raw.githubusercontent.com/Developer3027/rails8-templates/refs/heads/main/template.rb```
+```rails new my-app -d postgresql -c tailwind -m https://raw.githubusercontent.com/Developer3027/rails-8-templates/refs/heads/tailwind/template.rb```
 
 This template will modify default files and add one new file. The gitignore file to add the line to ignore the bundle folder inside the vendor folder. It will also add some configuration to the ci.yml file for the github workflow to set up pg and run bundle when setting up ruby by grabing the code before the ruby setup and setting the cache to true. Finally it will add a base tailwind config file to the config folder.
