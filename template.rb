@@ -146,8 +146,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Ruby # Will run bundle auto on setup I assume because bundler-cache true.
-        uses: ruby/setup-ruby@v1Gifs
-
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
           bundler-cache: true
