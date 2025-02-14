@@ -8,6 +8,6 @@ This template will create a stimulus controller called flash that controls the n
 1. Open the prefered branch and click on the template.rb file. Click on the "*raw*" button and use that url in the command.
 2. Open the prefered branch and copy the template.rb code. Create a template.rb file in the folder you are going to create the new app and pass it in the command.
 
-## Flash-Fade
+## Flash-Fade new rails command with pg and tailwind
 
-```rails new my-app -d postgresql -c tailwind -m https://raw.githubusercontent.com/Developer3027/rails8-templates/refs/heads/main/template.rb```
+```rails new my-app -d postgresql -c tailwind -m https://https://raw.githubusercontent.com/Developer3027/rails-8-templates/refs/heads/flash-fade/template.rb```
