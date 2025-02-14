@@ -3,68 +3,54 @@ require 'fileutils'
 # Modify gitignore and workflow for rails and node for basic setup.
 # The added weight of the gem files should not be pushed up to github.
 
-# When cloning the repo, run bundle or bundle install and Rails will review the gem / 
-# gem-lock file and install the missing gems. Pushing that weight is not needed.
+# On setting up testing, When cloning the repo, run bundle or bundle install and Rails will review 
+# the gem / gem-lock file and install the missing gems. Pushing that weight is not needed.
 
 # This templates will add the lines to the gitignore, cutting the weight of the tracked 
 # files, and modify the workflow job - test to ensure the container is set up properly
 # and working. Uses PostgreSQL in workflow. 
 
-# NOTE - This will completely rewrite these files.
-# NOTW - Default used with modifications noted.
+# NOTE - This will append to .gitignore and overwrite ci.yml if it exists.
 
-# Method to write a file, deleting existing file if necessary
+# Method to write a file, overwriting existing content
 def write_file(file_path, content)
   if File.exist?(file_path)
-    File.delete(file_path)  # Delete the existing file
+    puts "Warning: #{file_path} already exists. Overwriting it."
   end
   File.open(file_path, 'w') do |file|
-    file.write(content)  # Write the new content
+    file.write(content)
   end
+  puts "Created/updated file: #{file_path}"
+rescue => e
+  puts "Error writing to #{file_path}: #{e.message}"
+end
+
+# Method to append content to a file if it doesn't already exist
+def append_to_file(file_path, content)
+  existing_content = File.read(file_path) if File.exist?(file_path)
+  unless existing_content&.include?(content)
+    File.open(file_path, 'a') do |file|
+      file.puts(content)
+    end
+    puts "Appended to #{file_path}."
+  else
+    puts "Content already exists in #{file_path}. Skipping."
+  end
+rescue => e
+  puts "Error updating #{file_path}: #{e.message}"
 end
 
 # Add lines to .gitignore
-write_file('.gitignore', <<-CODE
+append_to_file('.gitignore', <<-CODE
 # ignore the gems of bundle
 /vendor/bundle
-
-# Ignore bundler config.
-/.bundle
-
-# Ignore all environment files.
-/.env*
-
-# Ignore all logfiles and tempfiles.
-/log/*
-/tmp/*
-!/log/.keep
-!/tmp/.keep
-
-# Ignore pidfiles, but keep the directory.
-/tmp/pids/*
-!/tmp/pids/
-!/tmp/pids/.keep
-
-# Ignore storage (uploaded files in development and any SQLite databases).
-/storage/*
-!/storage/.keep
-/tmp/storage/*
-!/tmp/storage/
-!/tmp/storage/.keep
-
-/public/assets
-
-# Ignore master key for decrypting credentials and more.
-/config/master.key
-
-/app/assets/builds/*
-!/app/assets/builds/.keep
 CODE
 )
 
 # Ensure the workflows directory exists
 workflow_dir = '.github/workflows'
 FileUtils.mkdir_p(workflow_dir) unless Dir.exist?(workflow_dir)
+puts "Created directory: #{workflow_dir}"
 
 # Modify the ci.yml file
 inside(workflow_dir) do
