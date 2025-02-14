@@ -70,7 +70,8 @@ inside(javascript_dir) do
       }
     }
   }
-CODE )
+CODE
+)
 end
 puts "Created Stimulus controller: #{javascript_dir}/flash_controller.js"
 
@@ -93,7 +94,8 @@ inside(view_share_dir) do
         <%= alert %>
       </div>
     <% end %>
-  CODE )
+  CODE
+)
 end
 puts "Created flash partial: #{view_share_dir}/_flash_notice.html.erb"
 
