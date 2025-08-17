@@ -64,6 +64,8 @@ Follow these steps precisely:
     - **Crucially, ensure the heredoc is correctly closed with `MARKDOWN` on its own line at the end.**
         
     - Use the exact text provided below for the file's content. Do not modify or add to it.
+  
+    - Add a `say` command to inform the user that the Tailwind doc has been created.
         
     
     Markdown
@@ -75,7 +77,7 @@ Follow these steps precisely:
     
     ## Location
     
-    The theme configuration is located in: `app/assets/stylesheets/tailwind/application.css`
+    The theme configuration is located in: `app/assets/tailwind/application.css`
     
     ## Modifying the Theme
     
