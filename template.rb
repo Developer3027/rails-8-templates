@@ -1,5 +1,3 @@
-# template.rb
-
 # 1. Define CSS Content
 tailwind_css_content = <<-CSS
 @import "tailwindcss";
@@ -45,7 +43,7 @@ CSS
 say "🚀 Setting up custom Tailwind CSS theme and documentation...", :cyan
 
 # 2. Handle the CSS File
-# Note: The path 'app/assets/stylesheets/tailwind/application.css' is used for consistency
+# Note: The path 'app/assets/tailwind/application.css' is used for consistency
 # as it's referenced in the documentation content below.
 create_file 'app/assets/tailwind/application.css', tailwind_css_content, force: true
 say "✅ The Tailwind theme has been applied.", :green
