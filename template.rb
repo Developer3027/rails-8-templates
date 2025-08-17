@@ -1,10 +1,9 @@
-# template.rb
+# frozen_string_literal: true
 
 # 1. Define CSS Content
-# This heredoc stores the custom theme configuration for Tailwind CSS.
 tailwind_css_content = <<~CSS
   @import "tailwindcss";
-  
+
   @theme {
     --color-ivory-50: #fefdfb;
     --color-ivory-100: #fdf9f3;
@@ -43,44 +42,71 @@ tailwind_css_content = <<~CSS
   }
 CSS
 
+say "🚀 Setting up custom Tailwind CSS theme and documentation...", :cyan
+
 # 2. Handle the CSS File
-# This ensures the default Tailwind CSS file is replaced with our custom theme.
-# Using `remove_file` with `force: true` handles both cases where the file
-# does or does not exist, simplifying the logic.
-tailwind_css_path = "app/assets/tailwind/application.css"
+css_file_path = "app/assets/stylesheets/tailwind/application.css"
 
-remove_file tailwind_css_path, force: true
-create_file tailwind_css_path, tailwind_css_content
+if file_exist?(css_file_path)
+  remove_file css_file_path
+end
 
-say "✅ Custom Tailwind CSS theme has been applied.", :green
+create_file css_file_path, tailwind_css_content
+
+say "Tailwind theme has been applied."
 
 # 3. Create the Markdown Documentation File
-# This creates a helpful guide in the project root for developers to understand
-# and modify the new Tailwind theme configuration.
 create_file "tailwind-config.md", <<~MARKDOWN
-# Tailwind CSS Theme Configuration
+  # Tailwind CSS Theme Configuration
 
-This file outlines the custom theme properties added to your Tailwind CSS setup via the `tailwind-rails` gem.
+  This file outlines the custom theme properties added to your Tailwind CSS setup via the `tailwind-rails` gem.
 
-## Location
+  ## Location
 
-The theme configuration is located in: `app/assets/tailwind/application.css`
+  The theme configuration is located in: `app/assets/stylesheets/tailwind/application.css`
 
-## Modifying the Theme
+  ## Modifying the Theme
 
-You can modify the theme directly within the `@theme` block in the `application.css` file. The current theme is an ivory and patel theme intended to show configuration.
+  You can modify the theme directly within the `@theme` block in the `application.css` file.
 
-### Colors
+  ### Colors
 
-Custom colors are defined using CSS variables. You can add new variables or change existing ones.
+  Custom colors are defined using CSS variables. You can add new variables or change existing ones.
 
-**Example:**
-```css
-@theme {
-  --color-ivory-50: #fefdfb;
-  /* ... other colors */
-  --color-new-brand-blue: #0055a4;
-}
+  **Example:**
+  @theme {
+    --color-ivory-50: #fefdfb;
+    /* ... other colors */
+    --color-new-brand-blue: #0055a4;
+  }
+
+  To use these colors in your HTML, apply them using Tailwind's arbitrary value syntax:
+
+  <div class="bg-[--color-ivory-50] text-[--color-new-brand-blue]">...</div>
+
+  ### Fonts
+
+  The default sans-serif font family is set. You can change it by modifying the `--font-family-sans` variable.
+
+  @theme {
+      --font-family-sans: 'Your-New-Font', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  ### Animations
+
+  Custom keyframes (`fadeIn`, `slideUp`) and animation utilities are defined. You can add more following the same pattern.
+
+  @keyframes yourNewAnimation {
+    /* ... */
+  }
+
+  @theme {
+    --animate-your-new-animation: yourNewAnimation 1s ease;
+  }
+
+  Use it in your HTML like this:
+
+  <div class="animate-[--animate-your-new-animation]">...</div>
+
+  For more information on theming with `tailwind-rails`, refer to the official documentation.
 MARKDOWN
-
-say "✅ Custom Tailwind theme doc created in root.", :green
