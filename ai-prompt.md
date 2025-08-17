@@ -66,8 +66,6 @@ Follow these steps precisely:
     - **Crucially, ensure the heredoc is correctly closed with `MARKDOWN` on its own line at the end.**
         
     - Use the exact text provided below for the file's content. Do not modify or add to it.
-  
-    - Add a `say` command to inform the user that the Tailwind doc has been created.
         
     
     Markdown
@@ -79,7 +77,7 @@ Follow these steps precisely:
     
     ## Location
     
-    The theme configuration is located in: `app/assets/tailwind/application.css`
+    The theme configuration is located in: `app/assets/stylesheets/tailwind/application.css`
     
     ## Modifying the Theme
     
@@ -90,37 +88,28 @@ Follow these steps precisely:
     Custom colors are defined using CSS variables. You can add new variables or change existing ones.
     
     **Example:**
-    ```css
     @theme {
       --color-ivory-50: #fefdfb;
       /* ... other colors */
       --color-new-brand-blue: #0055a4;
     }
-    ```
-    
-    To use these colors in your HTML, apply them using Tailwind's arbitrary value syntax:
+
+	To use these colors in your HTML, apply them using Tailwind's arbitrary value syntax:
     
     <div class="bg-[--color-ivory-50] text-[--color-new-brand-blue]">...</div>
-    
-    ### Fonts
+
+	### Fonts
     
     The default sans-serif font family is set. You can change it by modifying the `--font-family-sans` variable.
     
-    CSS
-    
-    ```
     @theme {
        --font-family-sans: 'Your-New-Font', ui-sans-serif, system-ui, sans-serif;
     }
-    ```
     
     ### Animations
     
     Custom keyframes (`fadeIn`, `slideUp`) and animation utilities are defined. You can add more following the same pattern.
     
-    CSS
-    
-    ```
     @keyframes yourNewAnimation {
       /* ... */
     }
@@ -128,13 +117,14 @@ Follow these steps precisely:
     @theme {
       --animate-your-new-animation: yourNewAnimation 1s ease;
     }
-    ```
     
     Use it in your HTML like this:
     
     <div class="animate-[--animate-your-new-animation]">...</div>
     
     For more information on theming with `tailwind-rails`, refer to the official documentation.
-    
+    ```
 
-Generate only the complete and error-free Ruby code for the `template.rb` file.
+Run linting and test before completion, checking for error.
+
+Generate only the complete Ruby code for the `template.rb` file.
