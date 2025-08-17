@@ -45,7 +45,7 @@ CSS
 # This ensures the default Tailwind CSS file is replaced with our custom theme.
 # Using `remove_file` with `force: true` handles both cases where the file
 # does or does not exist, simplifying the logic.
-tailwind_css_path = "app/assets/stylesheets/tailwind/application.css"
+tailwind_css_path = "app/assets/tailwind/application.css"
 
 remove_file tailwind_css_path, force: true
 create_file tailwind_css_path, tailwind_css_content
@@ -62,11 +62,11 @@ This file outlines the custom theme properties added to your Tailwind CSS setup 
 
 ## Location
 
-The theme configuration is located in: `app/assets/stylesheets/tailwind/application.css`
+The theme configuration is located in: `app/assets/tailwind/application.css`
 
 ## Modifying the Theme
 
-You can modify the theme directly within the `@theme` block in the `application.css` file.
+You can modify the theme directly within the `@theme` block in the `application.css` file. The current theme is an ivory and patel theme intended to show configuration.
 
 ### Colors
 
@@ -80,3 +80,5 @@ Custom colors are defined using CSS variables. You can add new variables or chan
   --color-new-brand-blue: #0055a4;
 }
 MARKDOWN
+
+say "✅ Custom Tailwind theme doc created in root.", :green
