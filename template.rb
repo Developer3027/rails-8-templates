@@ -94,3 +94,4 @@ To add a new color palette, open the CSS file and add your custom properties wit
   --color-slate-100: #f1f5f9;
   /* ... more shades */
 }
+MARKDOWN
