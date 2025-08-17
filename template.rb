@@ -1,156 +1,96 @@
-require 'fileutils'
+# template.rb
 
-# Modify gitignore and workflow for rails and node for basic setup.
-# The added weight of the gem files should not be pushed up to github.
-
-# On setting up testing, When cloning the repo, run bundle or bundle install and Rails will review 
-# the gem / gem-lock file and install the missing gems. Pushing that weight is not needed.
-
-# This templates will add the lines to the gitignore, cutting the weight of the tracked 
-# files, and modify the workflow job - test to ensure the container is set up properly
-# and working. Uses PostgreSQL in workflow. 
-
-# NOTE - This will append to .gitignore and overwrite ci.yml if it exists.
-
-# Method to write a file, overwriting existing content
-def write_file(file_path, content)
-  if File.exist?(file_path)
-    puts "Warning: #{file_path} already exists. Overwriting it."
-  end
-  File.open(file_path, 'w') do |file|
-    file.write(content)
-  end
-  puts "Created/updated file: #{file_path}"
-rescue => e
-  puts "Error writing to #{file_path}: #{e.message}"
+# Helper method for styled console output to improve user feedback.
+def say_status(status, message)
+  say "\e[1m\e[32m#{status.to_s.rjust(12)}\e[0m\e[1m  #{message}\e[0m"
 end
 
-# Method to append content to a file if it doesn't already exist
-def append_to_file(file_path, content)
-  existing_content = File.read(file_path) if File.exist?(file_path)
-  unless existing_content&.include?(content)
-    File.open(file_path, 'a') do |file|
-      file.puts(content)
-    end
-    puts "Appended to #{file_path}."
-  else
-    puts "Content already exists in #{file_path}. Skipping."
-  end
-rescue => e
-  puts "Error updating #{file_path}: #{e.message}"
-end
+say_status :info, "Applying custom Tailwind CSS theme..."
 
-# Add lines to .gitignore
-append_to_file('.gitignore', <<-CODE
-# ignore the gems of bundle
-/vendor/bundle
-CODE
-)
+# ----------------------------------------------------------------------------
+# 1. DEFINE THE CUSTOM TAILWIND CSS CONFIGURATION
+# ----------------------------------------------------------------------------
+# This heredoc contains the custom colors, fonts, and animations.
+# Using the `@theme` directive is the modern way to extend Tailwind in Rails.
+tailwind_config = <<~CSS
+@theme {
+  --color-ivory-50: #fefdfb;
+  --color-ivory-100: #fdf9f3;
+  --color-ivory-200: #faf2e7;
+  --color-ivory-300: #f6e8d7;
+  --color-ivory-400: #f0d9c3;
+  --color-ivory-500: #e8c7a6;
+  --color-ivory-600: #d4a574;
+  --color-ivory-700: #b8834a;
+  --color-ivory-800: #8f6238;
+  --color-ivory-900: #6b4a2a;
 
-# Ensure the workflows directory exists
-workflow_dir = '.github/workflows'
-FileUtils.mkdir_p(workflow_dir) unless Dir.exist?(workflow_dir)
-puts "Created directory: #{workflow_dir}"
+  --color-pastel-pink: #f8d7da;
+  --color-pastel-lavender: #e2d5f1;
+  --color-pastel-mint: #d1f2eb;
+  --color-pastel-peach: #fdebd0;
+  --color-pastel-sky: #cce7ff;
+  --color-pastel-sage: #e8f5e8;
 
-# Modify the ci.yml file
-inside(workflow_dir) do
-  write_file('ci.yml', <<-YAML
-name: CI
+  --font-family-sans: 'Inter var', ui-sans-serif, system-ui, sans-serif;
+}
 
-on:
-  pull_request:
-  push:
-    branches: [ main ]
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
 
-jobs:
-  scan_ruby:
-    runs-on: ubuntu-latest
+@keyframes slideUp {
+  0% { transform: translateY(10px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+@theme {
+  --animate-fade-in: fadeIn 0.5s ease-in-out;
+  --animate-slide-up: slideUp 0.3s ease-out;
+}
+CSS
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+# ----------------------------------------------------------------------------
+# 2. CREATE OR REPLACE THE MAIN TAILWIND STYLESHEET
+# ----------------------------------------------------------------------------
+# The `create_file` method handles both creation and replacement.
+# It automatically creates parent directories if they don't exist.
+# Using `force: true` ensures it overwrites any existing file without
+# prompting the user, which is ideal for an automated template.
+tailwind_css_path = "app/assets/stylesheets/tailwind/application.css"
+create_file tailwind_css_path, tailwind_config, force: true
+say_status :replace, tailwind_css_path
 
-      - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
+# ----------------------------------------------------------------------------
+# 3. DEFINE THE DOCUMENTATION CONTENT
+# ----------------------------------------------------------------------------
+# This markdown content will guide developers on how to use and
+# modify the custom Tailwind theme.
+tailwind_docs = <<~MARKDOWN
+# Customizing Your Tailwind CSS Theme
 
-  scan_js:
-    runs-on: ubuntu-latest
+This project uses a custom Tailwind CSS configuration located at `app/assets/stylesheets/tailwind/application.css`. This file allows for easy theme extension using Tailwind's `@theme` directive, which is the modern and recommended approach for customization in Rails.
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+## Understanding `app/assets/stylesheets/tailwind/application.css`
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+This file is your central hub for extending the default Tailwind theme. It's processed by Tailwind's JIT (Just-In-Time) compiler, making your custom values available as utility classes throughout your application.
 
-      - name: Scan for security vulnerabilities in JavaScript dependencies
-        run: bin/importmap audit
+For example, a variable `--color-ivory-500` inside `@theme` becomes available as `bg-ivory-500`, `text-ivory-500`, etc.
 
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+---
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+## How to Modify the Theme
 
-      - name: Lint code for consistent style
-        run: bin/rubocop -f github
+### Adding New Colors 🎨
 
-  test:
-    runs-on: ubuntu-latest
+To add a new color palette, open the CSS file and add your custom properties within the `@theme` block. Follow the existing naming convention (`--color-<name>-<shade>`).
 
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_USER: postgres # Default for postgres. Container will be destroyed after run.
-          POSTGRES_PASSWORD: postgres # Default for postgres.
-        ports:
-          - 5432:5432
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
+```css
+@theme {
+  /* ... existing colors */
 
-    steps:
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql-client
-
-      - name: Checkout code # Grab the code for the package json
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby # Will run bundle auto on setup I assume because bundler-cache true.
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Run tests # Run Rails app tests
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: 
-          bin/rails db:migrate db:test:prepare test test:system
-
-      - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
-          if-no-files-found: ignore
-
-YAML
-  )
-end
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  /* ... more shades */
+}
