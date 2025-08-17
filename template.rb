@@ -3,6 +3,8 @@
 # 1. Define CSS Content
 # This heredoc stores the custom theme configuration for Tailwind CSS.
 tailwind_css_content = <<~CSS
+  @import "tailwindcss";
+  
   @theme {
     --color-ivory-50: #fefdfb;
     --color-ivory-100: #fdf9f3;
