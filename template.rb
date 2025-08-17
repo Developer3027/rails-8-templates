@@ -47,7 +47,7 @@ say "🚀 Setting up custom Tailwind CSS theme and documentation...", :cyan
 # 2. Handle the CSS File
 # Note: The path 'app/assets/stylesheets/tailwind/application.css' is used for consistency
 # as it's referenced in the documentation content below.
-create_file 'app/assets/stylesheets/tailwind/application.css', tailwind_css_content, force: true
+create_file 'app/assets/tailwind/application.css', tailwind_css_content, force: true
 say "✅ The Tailwind theme has been applied.", :green
 
 # 3. Define MARKDOWN Content
@@ -58,7 +58,7 @@ This file outlines the custom theme properties added to your Tailwind CSS setup 
 
 ## Location
 
-The theme configuration is located in: `app/assets/stylesheets/tailwind/application.css`
+The theme configuration is located in: `app/assets/tailwind/application.css`
 
 ## Modifying the Theme
 
